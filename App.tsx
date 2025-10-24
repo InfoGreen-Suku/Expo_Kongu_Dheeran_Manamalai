@@ -92,7 +92,7 @@ function Root() {
   };
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <NavigationContainer>
         <MainNavigator />
       </NavigationContainer>
