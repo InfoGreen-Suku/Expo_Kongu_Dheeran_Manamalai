@@ -25,5 +25,9 @@
         <data android:scheme="kongudheeranmanamalai"/>
       </intent-filter>
     </activity>
+     <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_stat_onesignal_default" />
+    <meta-data android:name="com.onesignal.inAppMessageHideGrayOverlay" android:value="true"/>
+    <meta-data android:name="com.onesignal.inAppMessageHideDropShadow" android:value="true"/>
   </application>
 </manifest>

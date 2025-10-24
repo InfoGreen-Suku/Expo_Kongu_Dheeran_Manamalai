@@ -8,14 +8,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const MainStack = createNativeStackNavigator();
 export default function MainNavigator() {
- 
+
+
   return (
-    <SafeAreaView style={{ flex: 1}}>
-    <MainStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"Webview"}>
-      <MainStack.Screen name="VerificationScreen" component={VerificationScreen} />
-      <MainStack.Screen name="Webview" component={Webview} />
-      <MainStack.Screen name="Network" component={Network} />
-    </MainStack.Navigator>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#009333' }}>
+      <MainStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"Webview"}>
+        <MainStack.Screen name="VerificationScreen" component={VerificationScreen} />
+        <MainStack.Screen name="Webview" component={Webview} />
+        <MainStack.Screen name="Network" component={Network} />
+      </MainStack.Navigator>
     </SafeAreaView>
   )
 }

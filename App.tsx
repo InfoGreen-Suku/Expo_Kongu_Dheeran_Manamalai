@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef } from "react";
-import { Text, TextInput, useColorScheme, View } from "react-native";
+import { Text, TextInput, useColorScheme } from "react-native";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import "react-native-reanimated";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
