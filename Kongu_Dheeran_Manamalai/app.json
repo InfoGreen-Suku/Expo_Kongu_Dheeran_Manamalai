@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Kongu_Dheeran_Manamalai",
+    "slug": "Kongu_Dheeran_Manamalai",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/Images/Logo1.png",
+    "scheme": "kongudheeranmanamalai",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dheerankongumanamalai.app"
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.dheerankongumanamalai.app"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/Images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/Images/Logo1.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      [
+        "onesignal-expo-plugin",
+        {
+          "mode": "production"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5fe29b81-750f-42bf-8708-8807a8ab1b27"
+      }
+    }
+  }
+}
