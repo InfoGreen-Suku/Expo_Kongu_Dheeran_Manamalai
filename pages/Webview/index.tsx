@@ -1,4 +1,7 @@
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { postUserDetails } from '@/hooks/api/postUserDetails';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
+import { useNavigation } from '@react-navigation/native';
 import * as StoreReview from 'expo-store-review';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -6,20 +9,12 @@ import {
   Alert,
   AppState,
   BackHandler,
-  Modal,
-  PermissionsAndroid,
-  Platform,
-  Text,
   ToastAndroid,
   View
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import DeviceInfo from 'react-native-device-info';
 import { WebView } from 'react-native-webview';
-import { scaleFont } from '@/constants/ScaleFont';
 import { styles } from './style';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import NetInfo from '@react-native-community/netinfo';
-import * as Application from 'expo-application';
 export default function Webview() {
   const webViewRef = useRef<any>(null);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -32,13 +27,110 @@ export default function Webview() {
   const [appOpenCount, setAppOpenCount] = useState(0);
   const lastReviewRequest = useRef<number>(0);
   const [appState, setAppState] = useState(AppState.currentState);
-
+  const [deviceInfo, setDeviceInfo] = useState<any>(null);
+  const hasPostedRef = useRef(false);
   const checkNetworkStatus = () => {
     NetInfo.fetch().then(state => {
       if (!state.isConnected) {
         navigation.navigate('Network'); // Navigate to network error page
       }
     });
+  };
+
+  useEffect(() => {
+    getId();
+    getAllDeviceInfo();
+  }, [])
+
+
+
+  useEffect(() => {
+    if (subscriptionID && deviceInfo?.subscriptionID !== subscriptionID) {
+      setDeviceInfo((prev: any) => ({ ...prev, subscriptionID }));
+    }
+  }, [subscriptionID, deviceInfo]);
+
+  useEffect(() => {
+    if (deviceInfo?.subscriptionID && !hasPostedRef.current) {
+      hasPostedRef.current = true;
+      postDeviceInfo();
+    }
+  }, [deviceInfo]);
+  const postDeviceInfo = async () => {
+    try {
+      const details = await postUserDetails(deviceInfo);
+      console.log("details", details);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getAllDeviceInfo = async () => {
+    try {
+      const [
+        androidApiLevel,
+        androidID,
+        brand,
+        systemName,
+        systemVersion,
+        applicationBuildVersion,
+        operatorName,
+        device,
+        deviceID,
+        deviceName,
+        fontScale,
+        hardware,
+        ipAddress,
+        macAddress,
+        manufacturer,
+        modal,
+        productName,
+        applicationVersion,
+      ] = await Promise.all([
+        DeviceInfo.getApiLevel(),
+        DeviceInfo.getAndroidId(),
+        DeviceInfo.getBrand(),
+        DeviceInfo.getSystemName(),
+        DeviceInfo.getSystemVersion(),
+        DeviceInfo.getBuildNumber(),
+        DeviceInfo.getCarrier(),
+        DeviceInfo.getDevice(),
+        DeviceInfo.getDeviceId(),
+        DeviceInfo.getDeviceName(),
+        DeviceInfo.getFontScale(),
+        DeviceInfo.getHardware(),
+        DeviceInfo.getIpAddress(),
+        DeviceInfo.getMacAddress(),
+        DeviceInfo.getManufacturer(),
+        DeviceInfo.getModel(),
+        DeviceInfo.getProduct(),
+        DeviceInfo.getVersion(),
+
+      ]);
+      const deviceInfo = {
+        androidApiLevel,
+        androidID,
+        brand,
+        systemName,
+        systemVersion,
+        applicationBuildVersion,
+        operatorName,
+        device,
+        deviceID,
+        deviceName,
+        fontScale,
+        hardware,
+        ipAddress,
+        macAddress,
+        manufacturer,
+        modal,
+        productName,
+        applicationVersion,
+      };
+      setDeviceInfo(deviceInfo);
+    } catch (error) {
+      console.error('Error getting device info:', error);
+    }
   };
 
   const checkAndRequestReview = async () => {
@@ -72,12 +164,6 @@ export default function Webview() {
 
 
   useEffect(() => {
-    // getting androidID
-    const androidid = Application.getAndroidId()
-    setAndroidID(androidid);
-    getId();
-
-
     // Handle hardware back press for moving previous page and exit the app
 
     const reviewSubscription = AppState.addEventListener('change', nextAppState => {
@@ -135,7 +221,7 @@ export default function Webview() {
       {/* here i am checking the user status for getting the link from api if user status is pending the api doesn't provide the link that case it navigate to bending screen once the status is success it will provid the link and user navigate to webview  */}
 
       <WebView
-        userAgent={`infogreen-c-app/${AndroidID}/${subscriptionID}`}
+        userAgent={`infogreen-c-app/${deviceInfo?.androidID}/${subscriptionID}`}
         source={{ uri: 'https://user.kongudheeranmanamalai.com/auth-login.php' }}
         startInLoadingState
         renderLoading={() => (
@@ -158,10 +244,10 @@ export default function Webview() {
         onError={(e) => {
           const { description } = e.nativeEvent;
           console.warn('WebView Error:', description);
-          if(description==="net::ERR_INTERNET_DISCONNECTED"){
+          if (description === "net::ERR_INTERNET_DISCONNECTED") {
             navigation.navigate('Network');
           }
-          else{
+          else {
             Alert.alert('Page Load Error', description, [
               { text: 'Retry', onPress: () => webViewRef.current?.reload() },
             ]);

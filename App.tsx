@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef } from "react";
-import { Text, TextInput, useColorScheme } from "react-native";
+import { Text, TextInput, useColorScheme, View } from "react-native";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import "react-native-reanimated";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -92,11 +92,14 @@ function Root() {
   };
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <StatusBar style="light" />
-      <NavigationContainer>
-        <MainNavigator />
-      </NavigationContainer>
-
+      <View style={{ flex: 1 }}>
+        <View style={{  backgroundColor: '#009333', height:insets.top }} />
+        <StatusBar style="light" />
+        <NavigationContainer>
+          <MainNavigator />
+        </NavigationContainer>
+        <View style={{height:insets.bottom }} />
+      </View>
     </ThemeProvider>
-  )
+  );
 }
