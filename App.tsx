@@ -45,7 +45,7 @@ function Root() {
   useEffect(() => {
     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     OneSignal.initialize("0e92107b-915a-41d3-9570-bb3d3430ab72");
-    OneSignal.Notifications.requestPermission(true);
+    // OneSignal.Notifications.requestPermission(true);
     OneSignal.User.pushSubscription
       .getIdAsync()
       .then((subscriptionId: any) => {
